@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown to Midnight</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        #timer {
+            font-size: 48px;
+            font-weight: bold;
+            color: #333;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #left{
+          font-size: 20px;
+            color: #333;
+            padding-top: 15px;
+            padding-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="timer">00:00:00</div>
+
+    <script>
+        // Target time: Tonight at 12:01 AM
+        const now = new Date();
+        const targetTime = new Date('2025-09-10T00:01:00'); // Set to 12:01 AM next day
+
+        // If current time is past 12:01 AM, set target to next day's 12:01 AM
+        if (now.getHours() >= 24 && now.getMinutes() >= 1) {
+            targetTime.setDate(targetTime.getDate() + 1);
+        }
+
+        // Link to open when timer reaches zero
+        const linkToOpen = "https://youtu.be/cO1grYvfk5g?si=3Vq1qxB3mBk6B9Cq" // Replace with your desired URL
+
+        // Get the timer display element
+        const timerDisplay = document.getElementById('timer');
+
+        // Function to format time as HH:MM:SS
+        function formatTime(seconds) {
+            const hrs = Math.floor(seconds / 3600);
+            const mins = Math.floor((seconds % 3600) / 60);
+            const secs = seconds % 60;
+            return `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}<br><p id="left">left</p>`;
+        }
+
+        // Function to update the timer
+        function updateTimer() {
+            const currentTime = new Date();
+            const timeLeft = Math.floor((targetTime - currentTime) / 1000); // Time left in seconds
+
+            if (timeLeft <= 0) {
+                // Stop the timer and open the link
+                clearInterval(timerInterval);
+                timerDisplay.textContent = "Time's up!";
+                window.location.href = linkToOpen; // Open link in a new tab
+            } else {
+                // Update the display with remaining time
+                timerDisplay.innerHTML = formatTime(timeLeft);
+            }
+        }
+
+        // Start the timer and update every second
+        const timerInterval = setInterval(updateTimer, 1000);
+
+        // Call updateTimer immediately to avoid 1-second delay
+        updateTimer();
+    </script>
+</body>
+</html>
